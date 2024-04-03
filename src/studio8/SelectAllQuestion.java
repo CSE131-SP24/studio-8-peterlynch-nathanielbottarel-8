@@ -1,25 +1,33 @@
 package studio8;
 
 public class SelectAllQuestion extends MultipleChoiceQuestion {
+	private String[] choices;
 
-	public SelectAllQuestion(String prompt, String answer, String[] choices) {
-		//Hint: 1 point per choice
+	public SelectAllQuestion(String prompt, String answer, String[] choices) 
+	{
+		super(prompt, answer, choices.length, choices);
 		//FIXME
 	}
-	
-	public int checkAnswer(String givenAnswer) {
-		//FIXME Should return partial credit (if earned)!
-		return 0;
+
+	public int checkAnswer(String givenAnswer)
+	{
+		int score = this.getPoints() - findIncorrectGivenAnswers(givenAnswer);
+		score = score - findMissingCorrectAnswers(givenAnswer);
+		return score;
+
 	}
 
-	private int findMissingCorrectAnswers(String givenAnswer) {
+
+	private int findMissingCorrectAnswers(String givenAnswer) 
+	{
 		String answer = this.getAnswer();
 		//how many letters are in the correct answer but not the given answer?
 		int incorrectValues = findMissingCharacters(givenAnswer, answer);
 		return incorrectValues;
 	}
-	
-	private int findIncorrectGivenAnswers(String givenAnswer) {
+
+	private int findIncorrectGivenAnswers(String givenAnswer)
+	{
 		String answer = this.getAnswer();
 		//how many letters are in the given answer but not the correct answer?
 		int incorrectValues = findMissingCharacters(answer, givenAnswer);
@@ -33,7 +41,8 @@ public class SelectAllQuestion extends MultipleChoiceQuestion {
 	 * 
 	 * This method is marked static as it does not depend upon any instance variables
 	 */
-	private static int findMissingCharacters(String baseString, String toCheck) {
+	private static int findMissingCharacters(String baseString, String toCheck) 
+	{
 		int missingValues = 0;
 		for(int i = 0; i < toCheck.length(); i++) {
 			char characterToLocate = toCheck.charAt(i);
@@ -43,7 +52,7 @@ public class SelectAllQuestion extends MultipleChoiceQuestion {
 		}
 		return missingValues;
 	}	
-	
+
 	public static void main(String[] args) {
 		String[] choices = {"instance variables", "git", "methods", "eclipse"};
 		Question selectAll = new SelectAllQuestion("Select all of the following that can be found within a class:", "13", choices);
@@ -59,6 +68,6 @@ public class SelectAllQuestion extends MultipleChoiceQuestion {
 		System.out.println(selectAll.checkAnswer("4")); //1 point
 		System.out.println(selectAll.checkAnswer("124")); //1 point
 		System.out.println(selectAll.checkAnswer("24")); //0 points
-		
+
 	}
 }
